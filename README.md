@@ -43,5 +43,5 @@ DATABASES = {
 
 ![image](https://user-images.githubusercontent.com/80199144/151259624-884a82db-dfa6-4e2a-8ea0-e5f628e0a988.png)
 
-![image](https://user-images.githubusercontent.com/80199144/151259598-09762e8d-4d7f-421f-9f4a-5f99f09348aa.png)
+![image](https://user-images.githubusercontent.com/80199144/151259702-123bd625-aae6-4633-b711-5a817787b28c.png)
 
