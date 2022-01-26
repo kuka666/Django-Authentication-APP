@@ -1,0 +1,163 @@
+{% extends 'base/main.html' %} {% block content %}
+    <style>@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #3b4465;
+        font-family: 'Poppins',sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .container {
+        background-color: #23a2f6  ;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        width: 400px;
+    }
+
+    h2 {
+        text-align: center;
+        margin: 0 0 20px;
+    }
+
+    .form {
+        padding: 30px 40px;
+    }
+
+    .form-control {
+        margin-bottom: 10px;
+        padding-bottom: 20px;
+        position: relative;
+    }
+
+    .form-control label {
+        font-family: 'Poppins',sans-serif;
+        color: black;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .form-control input {
+        border: 2px solid #f0f0f0;
+        border-radius: 4px;
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .form-control input:focus {
+        outline: 0;
+        border-color: #777;
+    }
+
+    .form-control small {
+        color: red;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+
+    #button {
+        margin-top: 50px;
+        width: 100%;
+        background-color: #ffffff;
+        color: #080710;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .here{
+        text-decoration: none;
+        color: black;
+    }
+    .span{
+        text-decoration: none;
+    }</style>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <div >
+        {% if request.user.is_authenticated %}
+            <a style="pad" href="{% url 'logout' %}">Logout</a> {% else %}
+            <a href="{% url 'login' %}">Login</a> {% endif %}
+        <div>
+            <h1>Hello {{request.user|title}}</h1>
+            <h3 style="margin:0">You have <i>{{count}}</i> incomplete task{{ count|pluralize:"s" }}</h3>
+        </div>
+
+    </div>
+
+
+    <div id="search-add-wrapper">
+
+        {% if tasks|length > 0 %}
+            <a id="add-link" href="{% url 'task-create' %}">ADD TASK</a>
+        {% endif %}
+    </div>
+
+
+    <!-- Hidden form. Form submits new item positions -->
+    <form style="display: none;" id="reorderForm" method="post" action="{% url 'task-reorder' %}">
+        {% csrf_token %}
+        <input type="hidden" id="positionInput" name="position">
+    </form>
+
+
+    <div id="tasklist" class="task-items-wrapper">
+        {% for task in tasks %}
+            <div class="task-wrapper" style="background-color: #23a2f6;margin-bottom: 10px" data-position="{{task.pk}}">
+                <div class="task-title">
+                    {% if task.complete %}
+                        <div class="task-complete-icon"></div>
+                        <i><s><a href="{% url 'task-update' task.id %}">{{task}}</a></s></i> {% else %}
+                        <div class="task-incomplete-icon"></div>
+                        <a href="{% url 'task-update' task.id %}">{{task}}</a> {% endif %}
+                </div>
+                <div class="task-controls">
+                    <a class="delete-link" href="{% url 'task-delete' task.id %}">change</a>
+                </div>
+            </div>
+
+            {% empty %}
+            <div style="text-align: center; padding-bottom: 10px; line-height: 1em;">
+                <h3>No new tasks are created.</h3>
+                <h3>Create a <a style="text-decoration: none; color: #e53935;" href="{% url 'task-create' %}">New task</a> ! </h3>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        var taskList = document.getElementById("tasklist");
+        var reorderForm = document.getElementById("reorderForm");
+        var positionInput = document.getElementById("positionInput");
+
+        let sortable = Sortable.create(taskList, {
+            handle: '.handle',
+            ghostClass: 'dropArea',
+            chosenClass: 'selectedTask',
+
+        });
+
+        function reordering() {
+            const rows = document.getElementsByClassName("task-wrapper");
+            let pos = [];
+            for (let row of rows) {
+                pos.push(row.dataset.position);
+            }
+            console.log(pos.join(","))
+            positionInput.value = pos.join(',');
+            reorderForm.submit();
+        }
+
+        document.ondrop = reordering
+    </script>
+
+{% endblock content %}
