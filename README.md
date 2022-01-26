@@ -10,18 +10,20 @@ Django authentication app, with design, login and register. Used Database Postgr
 2.source venv/bin/activate
 
 #### Install the requirements
-bash
+``bash
 pip install -r requirements.txt
+``
 
 
 #### Migrate and Runserver
-bash
+``bash
 python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
+``
 
 #### Change the Datbase Settings in Advantage.settings.py
-bash
+``bash
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -31,7 +33,7 @@ DATABASES = {
         'HOST': 'localhost',
     }
 }
-
+``
 #Example
 
 ## When you run the server go to http://127.0.0.1:8000/
